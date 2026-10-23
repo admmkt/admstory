@@ -2,7 +2,7 @@
 //   POST /checkout  — usuário logado (token do Firebase) escolhe o plano e recebe o link de assinatura do Mercado Pago.
 //   POST /verificar — usuário logado pede para conferir no MP (caso o aviso do webhook tenha se perdido).
 //   POST /cancelar  — usuário logado cancela a renovação; o período já pago continua valendo.
-//   POST /chave     — chave mestra de teste (segredo MASTER_KEY): libera 30 dias para a conta logada.
+//   POST /chave     — chave mestra de teste (segredo MASTER_KEY): libera 3 dias para a conta logada.
 //   POST /webhook   — o Mercado Pago avisa; conferimos a assinatura HMAC, consultamos a API do MP
 //                     (fonte da verdade, nunca o corpo do aviso) e gravamos users/{uid}.paidUntil.
 // Não guardamos dado de cartão nem cadastro: só uid, id da assinatura, plano e validade.
@@ -68,7 +68,7 @@ async function masterKey(req, env) {
   const { key } = await req.json().catch(() => ({}));
   if (!env.MASTER_KEY || !safeEqual(String(key || "").trim(), env.MASTER_KEY)) return json({ error: "chave" }, 403);
   const token = await googleToken(env);
-  const until = Date.now() + 30 * 864e5;
+  const until = Date.now() + 3 * 864e5;
   if (until > await getPaidUntil(env, token, user.uid)) await setPaidUntil(env, token, user.uid, until, "chave-mestra", "teste");
   return json({ ok: true });
 }
