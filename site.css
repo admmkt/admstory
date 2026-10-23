@@ -1,11 +1,12 @@
 :root{
-  --bg:#0e0e11;
-  --panel:#16161a;
-  --card:#1f1f25;
-  --line:#2c2c34;
-  --text:#f3f2ef;
-  --muted:#9a98a1;
-  --accent:#ff5a36;
+  --bg:#070d1a;
+  --panel:#0d1628;
+  --card:#132038;
+  --line:#1f2e4a;
+  --text:#eef3fb;
+  --muted:#8e9cb4;
+  --accent:#0a6fd6;
+  --accent-text:#5aa9ff;
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -33,15 +34,15 @@ nav .nav-cta{color:var(--text);border:1px solid var(--line);border-radius:999px;
 .btn:hover{filter:brightness(1.07);}
 .btn:disabled{opacity:.5;cursor:wait;}
 .btn.ghost{background:none;border:1px solid var(--line);color:var(--text);}
-.btn.ghost:hover{border-color:#4a4a55;filter:none;}
+.btn.ghost:hover{border-color:#3a5078;filter:none;}
 .link{background:none;border:none;padding:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:13.5px;}
 .fine{font-size:13px;color:var(--muted);}
 .center{text-align:center;margin-top:20px;}
 
 .hero{display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:40px;padding-top:40px;}
-.eyebrow{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 14px;}
+.eyebrow{color:var(--accent-text);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 14px;}
 .hero h1{font-size:clamp(34px,5.4vw,56px);letter-spacing:-.01em;}
-.lead{font-size:17px;color:#cfcdd4;margin:20px 0 28px;max-width:34em;}
+.lead{font-size:17px;color:#c7d2e4;margin:20px 0 28px;max-width:34em;}
 .cta{display:flex;flex-wrap:wrap;gap:12px;}
 .hero-art{position:relative;height:460px;}
 .hero-art img{
@@ -89,12 +90,12 @@ nav .nav-cta{color:var(--text);border:1px solid var(--line);border-radius:999px;
 .choose label{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;color:var(--text);cursor:pointer;}
 .choose label:has(input:checked){border-color:var(--accent);}
 .choose input{accent-color:var(--accent);width:18px;height:18px;margin:0;}
-.choose em{font-style:normal;color:var(--accent);font-size:12.5px;margin-left:6px;}
+.choose em{font-style:normal;color:var(--accent-text);font-size:12.5px;margin-left:6px;}
 details{border-top:1px solid var(--line);padding:14px 0;}
 .card details{margin-top:20px;}
 summary{cursor:pointer;font-weight:500;}
 details p{color:var(--muted);margin:10px 0 0;}
-.msg{margin:16px 0 0 !important;font-size:14px;color:#ffb199;}
+.msg{margin:16px 0 0 !important;font-size:14px;color:#9cc8ff;}
 .msg:empty{display:none;}
 #duvidas{max-width:760px;}
 
@@ -137,7 +138,7 @@ details p{color:var(--muted);margin:10px 0 0;}
 .i-step b{display:block;font-family:'Poppins',sans-serif;font-size:16px;margin:16px 0 4px;}
 .i-step p{margin:0;color:var(--muted);font-size:14.5px;}
 .i-step strong{color:var(--text);}
-.app-link{color:var(--accent);}
+.app-link{color:var(--accent-text);}
 
 .phone{aspect-ratio:9/17;max-width:190px;margin:0 auto;border-radius:30px;padding:9px;background:#2a2a31;box-shadow:0 24px 50px -24px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.08);}
 .scr{position:relative;height:100%;border-radius:22px;background:#f4f4f6;color:#1c1c20;overflow:hidden;font-size:10.5px;display:flex;flex-direction:column;}
@@ -165,14 +166,14 @@ details p{color:var(--muted);margin:10px 0 0;}
 .dialog b{font-size:12px;}
 .dialog > span{color:#777;}
 .dialog div{display:flex;gap:10px;margin-top:10px;color:#1a73e8;align-items:center;}
-.home{display:grid;grid-template-columns:repeat(4,1fr);align-content:start;gap:14px 10px;padding:30px 12px;background:linear-gradient(160deg,#ff8a5c,#6b3cff);}
+.home{display:grid;grid-template-columns:repeat(4,1fr);align-content:start;gap:14px 10px;padding:30px 12px;background:linear-gradient(160deg,#3d8bff,#002b68);}
 .home i{aspect-ratio:1;border-radius:10px;background:rgba(255,255,255,.35);}
 .hl-app{width:100%;border-radius:10px;animation:pop 1.8s ease-in-out infinite;box-shadow:0 0 0 3px #fff;}
 
 /* destaque animado do toque */
 .hl{position:relative;outline:2px solid var(--accent);outline-offset:1px;animation:pulse 1.8s ease-in-out infinite;}
 .dot.hl{outline-offset:-2px;}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,90,54,.55);}60%{box-shadow:0 0 0 9px rgba(255,90,54,0);}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(10,111,214,.6);}60%{box-shadow:0 0 0 9px rgba(10,111,214,0);}}
 @keyframes pop{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
 @media (prefers-reduced-motion:reduce){.hl,.hl-app,.install{animation:none;}}
 

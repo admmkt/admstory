@@ -447,9 +447,17 @@ FONTS.forEach(f => {
    LOGO DO CLIENTE
    ============================================================ */
 const logoInput = document.getElementById("logoInput");
-const logoPreview = document.getElementById("logoPreview");
-const logoHint = document.getElementById("logoHint");
-const logoRemove = document.getElementById("logoRemove");
+const logoLib = document.getElementById("logoLib");
+const logoAdd = logoLib.querySelector(".logo-add");
+
+// Biblioteca de logos: lista de dataURLs, só neste navegador.
+// shortcut: localStorage (~5 MB, umas 20–40 logos); se faltar espaço, migrar para IndexedDB.
+const LOGOS_KEY = "stories.logos.v1";
+let logos = [];
+try{ logos = (JSON.parse(localStorage.getItem(LOGOS_KEY)) || []).filter(d => typeof d === "string" && d.startsWith("data:image/")); }catch(e){}
+function saveLogos(){
+  try{ localStorage.setItem(LOGOS_KEY, JSON.stringify(logos)); return true; }catch(e){ return false; }
+}
 
 function loadImage(src){
   return new Promise((res, rej) => {
@@ -462,10 +470,46 @@ function loadImage(src){
 
 async function applyLogo(dataUrl){
   logoImg = dataUrl ? await loadImage(dataUrl).catch(() => null) : null;
-  logoPreview.hidden = !logoImg;
-  logoHint.hidden = !!logoImg;
-  logoRemove.hidden = !logoImg;
-  if(logoImg) logoPreview.src = dataUrl;
+  renderLogos();
+}
+
+async function useLogo(dataUrl){
+  state.logo = dataUrl;
+  await applyLogo(dataUrl);
+  update();
+}
+
+function renderLogos(){
+  logoLib.querySelectorAll(".logo-tile:not(.logo-add)").forEach(el => el.remove());
+  const none = document.createElement("button");
+  none.type = "button";
+  none.className = "logo-tile logo-none" + (state.logo ? "" : " active");
+  none.innerHTML = "<span>Sem logo</span>";
+  none.onclick = () => useLogo(null);
+  logoLib.insertBefore(none, logoAdd);
+  logos.forEach(d => {
+    const tile = document.createElement("div");
+    tile.className = "logo-tile" + (d === state.logo ? " active" : "");
+    const pick = document.createElement("button");
+    pick.type = "button";
+    pick.className = "logo-pick";
+    pick.setAttribute("aria-label", "Usar esta logo");
+    pick.innerHTML = `<img src="${d}" alt="">`;
+    pick.onclick = () => useLogo(d);
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "logo-del";
+    del.setAttribute("aria-label", "Apagar logo");
+    del.textContent = "×";
+    del.onclick = async () => {
+      if(!confirm("Apagar esta logo da biblioteca?")) return;
+      logos = logos.filter(x => x !== d);
+      saveLogos();
+      if(state.logo === d) await useLogo(null); else renderLogos();
+    };
+    tile.append(pick, del);
+    logoLib.insertBefore(tile, logoAdd);
+  });
 }
 
 logoInput.addEventListener("change", async e => {
@@ -481,20 +525,21 @@ logoInput.addEventListener("change", async e => {
     c.width = Math.round(img.width * s) || 800;
     c.height = Math.round(img.height * s) || 800;
     c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-    state.logo = c.toDataURL("image/png");
-    await applyLogo(state.logo);
-    update();
+    const d = c.toDataURL("image/png");
+    if(!logos.includes(d)){
+      logos.push(d);
+      if(!saveLogos()){
+        logos.pop();
+        alert("A biblioteca está cheia neste aparelho. Apague alguma logo e tente de novo.");
+        return;
+      }
+    }
+    await useLogo(d);
   }catch(err){
     alert("Não foi possível abrir essa imagem. Tente um PNG ou JPG.");
   }finally{
     URL.revokeObjectURL(url);
   }
-});
-
-logoRemove.addEventListener("click", async () => {
-  state.logo = null;
-  await applyLogo(null);
-  update();
 });
 
 /* ============================================================
@@ -544,7 +589,7 @@ videoInput.addEventListener("change", e => {
    LIMPAR
    ============================================================ */
 document.getElementById("resetBtn").addEventListener("click", async () => {
-  if(!confirm("Apagar textos, cores, logo e template e começar do zero?")) return;
+  if(!confirm("Apagar textos, cores e template e começar do zero? Sua biblioteca de logos continua salva.")) return;
   try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
   state = clone(DEFAULTS);
   videoInput.value = "";
@@ -709,6 +754,8 @@ function syncUI(){
 
 async function init(){
   syncUI();
+  // quem já tinha uma logo antes da biblioteca: ela entra como a primeira
+  if(state.logo && !logos.includes(state.logo)){ logos.unshift(state.logo); saveLogos(); }
   await applyLogo(state.logo);
   try{
     await Promise.all([

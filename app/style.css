@@ -1,13 +1,13 @@
 :root{
-  --bg:#0e0e11;
-  --panel:#16161a;
-  --card:#1f1f25;
-  --card-hover:#26262e;
-  --line:#2c2c34;
-  --text:#f3f2ef;
-  --muted:#8d8b94;
-  --accent:#ff5a36;
-  --accent-soft:rgba(255,90,54,.14);
+  --bg:#070d1a;
+  --panel:#0d1628;
+  --card:#132038;
+  --card-hover:#1a2a48;
+  --line:#1f2e4a;
+  --text:#eef3fb;
+  --muted:#8e9cb4;
+  --accent:#0a6fd6;
+  --accent-soft:rgba(10,111,214,.18);
   --radius:12px;
 }
 *{box-sizing:border-box;}
@@ -80,7 +80,7 @@ textarea{min-height:68px;line-height:1.45;}
 .file-drop svg{width:22px;height:22px;stroke:var(--muted);}
 .fd-title{font-size:13px;font-weight:500;word-break:break-all;}
 .fd-sub{font-size:11px;color:var(--muted);}
-.file-drop input,.logo-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.file-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;}
 
 .preset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .preset-btn{
@@ -124,16 +124,25 @@ textarea{min-height:68px;line-height:1.45;}
 .font-btn b{font-size:20px;line-height:1;}
 .font-btn span{font-size:10px;color:var(--muted);}
 
-.logo-row{display:flex;align-items:center;gap:12px;}
-.logo-drop{
-  position:relative;flex:1;min-height:84px;display:flex;align-items:center;justify-content:center;
-  border:1.5px dashed var(--line);border-radius:var(--radius);cursor:pointer;text-align:center;
-  font-size:13px;padding:10px;
-  background:repeating-conic-gradient(#202027 0% 25%,#1a1a20 0% 50%) 50%/16px 16px;
+.logo-lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px;}
+.logo-tile{
+  position:relative;aspect-ratio:1;border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  background:repeating-conic-gradient(#16233c 0% 25%,#101b30 0% 50%) 50%/14px 14px;padding:0;
 }
-.logo-drop:hover{border-color:var(--accent);}
-.logo-drop small{color:var(--muted);font-size:11px;}
-.logo-drop img{max-width:70%;max-height:64px;object-fit:contain;}
+.logo-tile.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+.logo-pick,.logo-none{width:100%;height:100%;background:none;border:none;padding:8px;display:grid;place-items:center;}
+.logo-none{background:var(--card);font-size:11px;color:var(--muted);}
+.logo-pick img{max-width:100%;max-height:100%;object-fit:contain;}
+.logo-del{
+  position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:none;
+  background:rgba(5,10,20,.75);color:#fff;font-size:15px;line-height:1;display:grid;place-items:center;
+}
+.logo-add{display:grid;place-items:center;border-style:dashed;background:none;cursor:pointer;color:var(--muted);font-size:22px;}
+.logo-add:hover{border-color:var(--accent);color:var(--text);}
+.logo-add span{display:grid;justify-items:center;line-height:1.1;}
+.logo-add small{font-size:10px;}
+.logo-add input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.hint{font-size:11.5px;color:var(--muted);margin:8px 0 0;}
 
 .ghost-btn{
   background:none;border:1px solid var(--line);border-radius:8px;padding:7px 12px;
@@ -154,7 +163,7 @@ textarea{min-height:68px;line-height:1.45;}
 .primary-btn .bar{position:absolute;inset:0 auto 0 0;width:0;background:rgba(0,0,0,.22);transition:width .2s linear;}
 .primary-btn .label{position:relative;}
 .secondary-btn{margin-top:8px;background:none;border:1px solid var(--line);color:var(--text);font-size:13px;min-height:44px;padding:11px;}
-.secondary-btn:hover{border-color:#45454f;}
+.secondary-btn:hover{border-color:#3a5078;}
 .version{text-align:center;font-size:10.5px;color:var(--muted);margin-top:10px;}
 
 /* ---------- PRÉVIA ---------- */
@@ -165,7 +174,7 @@ textarea{min-height:68px;line-height:1.45;}
 .phone-shell{
   width:min(380px,calc((100vh - 64px) * .5625));aspect-ratio:9/16;border-radius:38px;
   background:#050506;padding:10px;
-  box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px #2a2a31;
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px #1f2e4a;
 }
 .phone-inner{
   position:relative;width:100%;height:100%;border-radius:29px;overflow:hidden;
@@ -190,7 +199,7 @@ a.ghost-btn{text-decoration:none;}
 
 .gate{
   position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px;
-  background:rgba(10,10,13,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  background:rgba(5,10,20,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
 }
 .gate-card{
   width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);border-radius:20px;

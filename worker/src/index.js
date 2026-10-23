@@ -61,15 +61,24 @@ async function checkout(req, env) {
   return json({ url: sub.init_point });
 }
 
-// shortcut: chave única de teste, sem limite de usos; apagar o segredo MASTER_KEY no lançamento.
+// shortcut: chave única de teste, 1 uso por conta (quem criar outra conta usa de novo); apagar o segredo MASTER_KEY no lançamento.
 async function masterKey(req, env) {
   const user = await currentUser(req, env);
   if (!user) return json({ error: "login" }, 401);
   const { key } = await req.json().catch(() => ({}));
   if (!env.MASTER_KEY || !safeEqual(String(key || "").trim(), env.MASTER_KEY)) return json({ error: "chave" }, 403);
   const token = await googleToken(env);
+  const fields = await getUserFields(env, token, user.uid);
+  if (fields.keyUsed?.booleanValue) return json({ error: "usada" }, 409);
   const until = Date.now() + 3 * 864e5;
-  if (until > await getPaidUntil(env, token, user.uid)) await setPaidUntil(env, token, user.uid, until, "chave-mestra", "teste");
+  if (until > paidUntilOf(fields)) await setPaidUntil(env, token, user.uid, until, "chave-mestra", "teste");
+  // marca depois de liberar: se falhar no meio, a pessoa só tenta de novo
+  const res = await fetch(`${userDoc(env, user.uid)}?updateMask.fieldPaths=keyUsed`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ fields: { keyUsed: { booleanValue: true } } }),
+  });
+  if (!res.ok) throw new Error(`firestore patch ${res.status}`);
   return json({ ok: true });
 }
 
@@ -207,12 +216,14 @@ async function googleToken(env) {
 
 const userDoc = (env, uid) => `https://firestore.googleapis.com/v1/projects/${env.FIREBASE_PROJECT}/databases/(default)/documents/users/${uid}`;
 
-async function getPaidUntil(env, token, uid) {
+async function getUserFields(env, token, uid) {
   const res = await fetch(userDoc(env, uid), { headers: { Authorization: `Bearer ${token}` } });
-  if (res.status === 404) return 0;
+  if (res.status === 404) return {};
   if (!res.ok) throw new Error(`firestore get ${res.status}`);
-  return Date.parse((await res.json()).fields?.paidUntil?.timestampValue || "") || 0;
+  return (await res.json()).fields || {};
 }
+const paidUntilOf = fields => Date.parse(fields.paidUntil?.timestampValue || "") || 0;
+const getPaidUntil = async (env, token, uid) => paidUntilOf(await getUserFields(env, token, uid));
 
 async function setPaidUntil(env, token, uid, until, subscriptionId, plan) {
   const res = await fetch(`${userDoc(env, uid)}?updateMask.fieldPaths=paidUntil&updateMask.fieldPaths=subscriptionId&updateMask.fieldPaths=plan`, {
