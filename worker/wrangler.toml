@@ -1,0 +1,21 @@
+name = "adm-story-pagamentos"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+FIREBASE_PROJECT = "adm-story-app" # id do projeto Firebase do ADM Story
+SITE_ORIGIN = "https://admmkt.github.io"
+SITE_URL = "https://admmkt.github.io/admstory/"
+PRICE_MENSAL = "29.90" # em reais — mudar também em index.html (site)
+PRICE_ANUAL = "249.00"
+
+# Segredos (nunca no Git), via `npx wrangler secret put <NOME>`:
+#   MP_ACCESS_TOKEN    — Mercado Pago > Suas integrações > Credenciais de produção
+#   MP_WEBHOOK_SECRET  — Mercado Pago > Suas integrações > Webhooks > assinatura secreta
+#   GOOGLE_SA_EMAIL    — "client_email" da chave da conta de serviço do Firebase
+#   GOOGLE_SA_KEY      — "private_key" da mesma chave
+#   MASTER_KEY         — opcional, chave de teste (apagar no lançamento)
+
+# Guarda os logs (painel Cloudflare > Workers > Logs) para investigar pagamento que não liberou.
+[observability]
+enabled = true

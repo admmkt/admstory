@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ADM Story</title>
+<meta name="theme-color" content="#16161a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@800&family=Playfair+Display:wght@700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <aside class="panel">
+    <header class="brand">
+      <img class="mark" src="icon.svg" alt="">
+      <div class="brand-text">
+        <h1>ADM Story</h1>
+        <span id="saveStatus">Salvo automaticamente</span>
+      </div>
+      <button class="ghost-btn" id="resetBtn" title="Apagar tudo e começar do zero">Limpar</button>
+      <a class="ghost-btn" href="../#conta" title="Minha conta e assinatura">Conta</a>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="template">Template</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="custom">Personalizar</button>
+    </nav>
+
+    <div class="tab-body" id="tab-template">
+      <section class="group">
+        <h2>Vídeo</h2>
+        <label class="file-drop">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <span class="fd-title" id="videoName">Escolher vídeo</span>
+          <span class="fd-sub">MP4 ou MOV — fica só no seu aparelho</span>
+          <input type="file" id="videoInput" accept="video/*">
+        </label>
+      </section>
+
+      <section class="group">
+        <h2>Template</h2>
+        <div class="preset-grid" id="presetGrid"></div>
+      </section>
+
+      <section class="group">
+        <h2>Textos</h2>
+        <label class="field-label" for="titleInput">Título</label>
+        <input type="text" id="titleInput" maxlength="40">
+        <div class="charcount"><span id="titleCount">0</span>/40</div>
+        <label class="field-label" for="subtitleInput">Subtítulo / descrição</label>
+        <textarea id="subtitleInput" maxlength="90"></textarea>
+        <div class="charcount"><span id="subCount">0</span>/90</div>
+      </section>
+    </div>
+
+    <div class="tab-body hidden" id="tab-custom">
+      <section class="group">
+        <h2>Paleta</h2>
+        <div class="palette-grid" id="paletteGrid"></div>
+        <div class="color-row">
+          <label><input type="color" id="colorBase"><span>Fundo</span></label>
+          <label><input type="color" id="colorAccent"><span>Destaque</span></label>
+          <label><input type="color" id="colorText"><span>Texto</span></label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Fonte</h2>
+        <div class="font-grid" id="fontGrid"></div>
+      </section>
+
+      <section class="group">
+        <h2>Sua logo</h2>
+        <div class="logo-row">
+          <label class="logo-drop" id="logoDrop">
+            <img id="logoPreview" alt="" hidden>
+            <span id="logoHint">Enviar logo<br><small>PNG com fundo transparente</small></span>
+            <input type="file" id="logoInput" accept="image/*">
+          </label>
+          <button class="ghost-btn" id="logoRemove" hidden>Remover</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="export">
+      <button class="primary-btn" id="downloadVideoBtn" disabled>
+        <span class="bar" id="exportBar"></span>
+        <span class="label" id="exportLabel">Exportar vídeo MP4</span>
+      </button>
+      <button class="secondary-btn" id="downloadBtn">Baixar só a moldura (PNG)</button>
+      <div class="version">v<span id="appVersion"></span> · Criado por <img src="../img/adm-digital.png" alt="" width="12" height="13"> ADM Digital</div>
+    </footer>
+  </aside>
+
+  <main class="stage">
+    <div class="phone-shell">
+      <div class="phone-inner">
+        <video id="bgVideo" muted loop playsinline></video>
+        <canvas id="mainCanvas" width="1080" height="1920"></canvas>
+        <div class="empty-hint" id="emptyHint">Escolha um vídeo para ver a prévia completa</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="update-toast" id="updateToast" hidden>
+  <span>Nova versão disponível</span>
+  <button id="updateBtn">Atualizar</button>
+</div>
+
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <img src="icon.svg" alt="" width="56" height="56">
+    <h2 id="gateTitle">Verificando sua assinatura…</h2>
+    <p id="gateText"></p>
+    <a class="primary-btn" id="gateBtn" href="../#conta" hidden></a>
+    <button class="link-btn" id="gateOut" hidden>Sair desta conta</button>
+  </div>
+</div>
+
+<script src="version.js"></script>
+<script src="app.js"></script>
+<script type="module" src="conta.js"></script>
+</body>
+</html>
