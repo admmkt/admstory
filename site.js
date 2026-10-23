@@ -109,17 +109,29 @@ $("cancelarBtn").onclick = async () => {
   btn.disabled = false;
 };
 
-// Chave de teste: o Worker confere com o segredo MASTER_KEY e libera 30 dias.
+// Chave de teste: o Worker confere com o segredo MASTER_KEY e libera 3 dias.
 $("chaveBtn").onclick = async () => {
   const btn = $("chaveBtn");
   btn.disabled = true;
   say("");
   try{
     const {ok} = await chamarWorker("/chave", {key: $("chave").value.trim()});
-    say(ok ? "Chave aceita! Acesso liberado por 30 dias." : "Chave inválida.");
+    say(ok ? "Chave aceita! Acesso liberado por 3 dias." : "Chave inválida.");
     if(ok) $("chave").value = "";
   }catch{
     say("Não foi possível conferir a chave agora. Tente de novo.");
   }
   btn.disabled = false;
 };
+
+// Abas do tutorial de instalação; abre na aba do aparelho de quem visita.
+const abas = [...document.querySelectorAll(".tabs [role=tab]")];
+function abrirAba(tab){
+  for(const t of abas){
+    const on = t === tab;
+    t.setAttribute("aria-selected", on);
+    $(t.getAttribute("aria-controls")).hidden = !on;
+  }
+}
+abas.forEach(t => t.onclick = () => abrirAba(t));
+if(/android/i.test(navigator.userAgent)) abrirAba($("tab-android"));
