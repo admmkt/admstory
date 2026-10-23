@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM Story — Stories prontos com a sua marca</title>
+<meta name="description" content="Templates prontos para Stories com sua logo e suas cores. Escolha o vídeo, escreva o título e exporte em MP4 em segundos.">
+<meta name="theme-color" content="#0e0e11">
+<link rel="icon" href="app/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<script type="module" src="site.js"></script>
+</head>
+<body>
+<header class="wrap top">
+  <a class="logo" href="./"><img src="app/icon.svg" alt="" width="34" height="34"><b>ADM Story</b></a>
+  <nav><a href="#como">Como funciona</a><a href="#planos">Planos</a><a class="nav-cta" href="#conta">Minha conta</a></nav>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div class="hero-text">
+      <p class="eyebrow">Para social media, lojas e criadores</p>
+      <h1>Stories com a sua marca, prontos em segundos.</h1>
+      <p class="lead">Escolha o vídeo, escreva o título e pronto: o ADM Story aplica um template profissional com a sua logo e as suas cores e exporta em MP4 para postar.</p>
+      <div class="cta">
+        <a class="btn" href="#planos">Assinar agora</a>
+        <a class="btn ghost" href="app/">Já sou assinante</a>
+      </div>
+      <p class="fine">Garantia de 7 dias · Cancele quando quiser</p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <img src="img/exemplo-1.jpg" alt="" width="270" height="480">
+      <img src="img/exemplo-2.jpg" alt="" width="270" height="480">
+      <img src="img/exemplo-3.jpg" alt="" width="270" height="480">
+    </div>
+  </section>
+
+  <section id="como" class="wrap">
+    <h2>Como funciona</h2>
+    <ol class="steps">
+      <li><b>Envie o vídeo</b><span>Direto do celular ou do computador. Ele não sai do seu aparelho.</span></li>
+      <li><b>Escolha o template</b><span>7 modelos prontos, já com a sua logo, paleta e fonte salvas.</span></li>
+      <li><b>Exporte e poste</b><span>MP4 em 1080×1920 com áudio, pronto para o Instagram, TikTok e WhatsApp.</span></li>
+    </ol>
+  </section>
+
+  <section class="wrap">
+    <h2>Tudo o que você precisa, nada que atrapalhe</h2>
+    <div class="features">
+      <div><b>Templates prontos</b><span>Faixa, degradê, cartão, moldura, etiqueta, manchete e minimalista.</span></div>
+      <div><b>Sua identidade</b><span>Sua logo, 8 paletas prontas ou as cores exatas da marca, e 3 estilos de fonte.</span></div>
+      <div><b>Exportação rápida</b><span>O vídeo sai mais rápido que a própria duração, sem perder qualidade.</span></div>
+      <div><b>Tudo salvo</b><span>Abra amanhã e continue de onde parou. Um toque em "Limpar" começa do zero.</span></div>
+      <div><b>Celular e computador</b><span>Funciona no navegador e pode ser instalado como app.</span></div>
+      <div><b>Sempre atualizado</b><span>Novos recursos chegam sozinhos, sem baixar nada.</span></div>
+    </div>
+  </section>
+
+  <section id="planos" class="wrap">
+    <h2>Planos</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Mensal</h3>
+        <p class="price">R$ 29,90<small>/mês</small></p>
+        <p>Todos os recursos. Renova todo mês, cancele quando quiser.</p>
+        <a class="btn ghost" href="#conta" data-plano="mensal">Assinar mensal</a>
+      </div>
+      <div class="plan featured">
+        <span class="badge">Economize 30%</span>
+        <h3>Anual</h3>
+        <p class="price">R$ 249<small>/ano</small></p>
+        <p>Equivale a R$ 20,75 por mês. Todos os recursos por 12 meses.</p>
+        <a class="btn" href="#conta" data-plano="anual">Assinar anual</a>
+      </div>
+    </div>
+    <p class="fine center">Pagamento com cartão pelo Mercado Pago. Garantia de 7 dias: se não gostar, devolvemos o valor integral.</p>
+  </section>
+
+  <section id="conta" class="wrap">
+    <h2>Minha conta</h2>
+    <div class="card">
+      <form id="login">
+        <p>Entre ou crie sua conta. A assinatura fica ligada a ela, e é com ela que você entra no app.</p>
+        <label>E-mail <input id="email" type="email" autocomplete="email" required></label>
+        <label>Senha <input id="senha" type="password" autocomplete="current-password" minlength="6" required></label>
+        <div class="row">
+          <button class="btn" type="submit">Entrar</button>
+          <button id="criar" class="btn ghost" type="button">Criar conta</button>
+        </div>
+        <button id="esqueci" class="link" type="button">Esqueci a senha</button>
+      </form>
+
+      <div id="painel" hidden>
+        <p class="who">Conta: <b id="contaEmail"></b> <button id="sair" class="link" type="button">sair</button></p>
+        <p id="status" class="status"></p>
+
+        <div id="ativoBox" hidden>
+          <a class="btn" href="app/">Abrir o ADM Story</a>
+          <button id="cancelarBtn" class="link" type="button">Cancelar renovação automática</button>
+        </div>
+
+        <div id="assinarBox" hidden>
+          <fieldset class="choose">
+            <legend>Escolha o plano</legend>
+            <label><input type="radio" name="plano" value="mensal"> <span><b>Mensal</b> R$ 29,90/mês</span></label>
+            <label><input type="radio" name="plano" value="anual" checked> <span><b>Anual</b> R$ 249/ano <em>economize 30%</em></span></label>
+          </fieldset>
+          <label>E-mail da sua conta no Mercado Pago <input id="mpEmail" type="email" autocomplete="email"></label>
+          <button id="assinarBtn" class="btn" type="button">Assinar com Mercado Pago</button>
+          <button id="verificarBtn" class="link" type="button">Já paguei — verificar pagamento</button>
+          <p class="fine">Pagamento com cartão no Mercado Pago. Não vemos nem guardamos os dados do seu cartão. Ao assinar você aceita os <a href="termos.html">termos de uso</a>.</p>
+        </div>
+
+        <details>
+          <summary>Tenho uma chave de teste</summary>
+          <label>Chave de teste <input id="chave" type="text" autocomplete="off"></label>
+          <button id="chaveBtn" class="btn ghost" type="button">Ativar</button>
+        </details>
+      </div>
+      <p id="msg" class="msg" role="status"></p>
+    </div>
+  </section>
+
+  <section id="duvidas" class="wrap">
+    <h2>Dúvidas</h2>
+    <details><summary>Como funciona a garantia?</summary><p>Você tem 7 dias depois do primeiro pagamento para pedir o reembolso integral, sem precisar explicar o motivo. É só escrever para o nosso e-mail de contato.</p></details>
+    <details><summary>Posso cancelar quando quiser?</summary><p>Sim. Em "Minha conta" há o botão de cancelar a renovação. Você continua usando até o fim do período já pago.</p></details>
+    <details><summary>Meus vídeos são enviados para algum servidor?</summary><p>Não. O vídeo é processado no seu próprio aparelho, e só você tem acesso a ele.</p></details>
+    <details><summary>Funciona no celular?</summary><p>Sim, no Chrome, no Edge e no Safari atualizados, no celular ou no computador. Dá para instalar como app pela opção "Adicionar à tela inicial".</p></details>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span>© ADM Story</span>
+  <a href="termos.html">Termos de uso e privacidade</a>
+  <a href="mailto:adm.mkt.contato@gmail.com">Contato</a>
+  <span class="madeby">Criado por <img src="img/adm-digital.png" alt="" width="18" height="20"> <b>ADM Digital</b></span>
+</footer>
+</body>
+</html>
