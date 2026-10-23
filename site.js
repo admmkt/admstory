@@ -109,14 +109,14 @@ $("cancelarBtn").onclick = async () => {
   btn.disabled = false;
 };
 
-// Chave de teste: o Worker confere com o segredo MASTER_KEY e libera 3 dias.
+// Chave de teste: o Worker confere com o segredo MASTER_KEY e libera 3 dias, uma vez por conta.
 $("chaveBtn").onclick = async () => {
   const btn = $("chaveBtn");
   btn.disabled = true;
   say("");
   try{
-    const {ok} = await chamarWorker("/chave", {key: $("chave").value.trim()});
-    say(ok ? "Chave aceita! Acesso liberado por 3 dias." : "Chave inválida.");
+    const {ok, data} = await chamarWorker("/chave", {key: $("chave").value.trim()});
+    say(ok ? "Chave aceita! Acesso liberado por 3 dias." : data.error === "usada" ? "Esta conta já usou a chave de teste." : "Chave inválida.");
     if(ok) $("chave").value = "";
   }catch{
     say("Não foi possível conferir a chave agora. Tente de novo.");
