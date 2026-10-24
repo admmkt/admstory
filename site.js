@@ -28,9 +28,10 @@ $("login").onsubmit = e => {
 $("criar").onclick = () => {
   if(!$("login").reportValidity()) return;
   say("");
+  testePendente = true; // o teste grátis começa assim que a conta é criada (onUser chama iniciarTeste)
   criarConta($("email").value.trim(), $("senha").value)
-    .then(() => say("Conta criada! Enviamos um link de confirmação para o seu e-mail. Agora escolha o plano."))
-    .catch(erro);
+    .then(() => say("Conta criada! Enviamos um link de confirmação para o seu e-mail."))
+    .catch(e => { testePendente = false; erro(e); });
 };
 $("esqueci").onclick = () => {
   say("");
@@ -165,14 +166,14 @@ const planos = ["Ver planos", "#planos", true];
 async function iniciarTeste(){
   if(!logado){
     testePendente = true;
-    mostrar("Crie sua conta para testar", "O teste grátis de 24 horas fica ligado à sua conta e não pede cartão. Crie a conta ou entre; o teste começa logo em seguida.",
+    mostrar("Crie sua conta para testar", "O teste grátis de 24 horas fica ligado à sua conta e não pede cartão. Ao criar a conta, o teste começa na hora.",
       [["Criar conta ou entrar", "#conta", false, () => setTimeout(() => $("email").focus(), 400)]]);
     return;
   }
   mostrar("Ativando o teste…", "Só um instante.");
   try{
     const {ok, status, data} = await chamarWorker("/teste");
-    if(ok && data.ok) mostrar("Teste grátis ativado!", `Você pode usar o app até ${quando(data.until)}: até 3 exportações, com a marca d'água "ADM Story". Depois, assine para exportar sem marca e sem limite.`, [["Abrir o app", "app/"]]);
+    if(ok && data.ok) mostrar("Teste grátis ativado!", `Você pode usar o app até ${quando(data.until)}: até 3 exportações, com a marca d'água "ADM Story". Depois, assine para exportar sem marca e sem limite.`, [["Começar a usar", "app/"]]);
     else if(status === 409 && data.error === "usado") mostrar("Você já usou o teste grátis nesta conta", "O teste é uma vez por conta. Assine para exportar sem marca d'água e sem limite.", [planos]);
     else if(status === 401) mostrar("Entre na sua conta", "Sua sessão expirou. Entre de novo para ativar o teste.", [["Entrar", "#conta"]]);
     else mostrar("Não foi possível ativar o teste", "Confira a internet e tente de novo.");
