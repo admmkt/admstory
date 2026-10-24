@@ -2,6 +2,7 @@
 //   POST /checkout  — usuário logado (token do Firebase) escolhe o plano e recebe o link de assinatura do Mercado Pago.
 //   POST /verificar — usuário logado pede para conferir no MP (caso o aviso do webhook tenha se perdido).
 //   POST /cancelar  — usuário logado cancela a renovação; o período já pago continua valendo.
+//   POST /teste     — teste grátis de 24 h, 1 vez por conta que nunca teve validade (plano "gratis": marca d'água e 3 exportações no app).
 //   POST /chave     — chave mestra de teste (segredo MASTER_KEY): libera 3 dias para a conta logada.
 //   POST /webhook   — o Mercado Pago avisa; conferimos a assinatura HMAC, consultamos a API do MP
 //                     (fonte da verdade, nunca o corpo do aviso) e gravamos users/{uid}.paidUntil.
@@ -28,6 +29,7 @@ export default {
       if (req.method === "POST" && url.pathname === "/checkout") return withHeaders(await checkout(req, env), cors);
       if (req.method === "POST" && url.pathname === "/verificar") return withHeaders(await verify(req, env), cors);
       if (req.method === "POST" && url.pathname === "/cancelar") return withHeaders(await cancel(req, env), cors);
+      if (req.method === "POST" && url.pathname === "/teste") return withHeaders(await freeTrial(req, env), cors);
       if (req.method === "POST" && url.pathname === "/chave") return withHeaders(await masterKey(req, env), cors);
       if (req.method === "POST" && url.pathname === "/webhook") return await webhook(req, url, env);
       return new Response("not found", { status: 404 });
@@ -80,6 +82,24 @@ async function masterKey(req, env) {
   });
   if (!res.ok) throw new Error(`firestore patch ${res.status}`);
   return json({ ok: true });
+}
+
+// shortcut: 1 teste por conta; quem cria outra conta ganha outro (decisão do dono: a marca d'água e o limite bastam).
+async function freeTrial(req, env) {
+  const user = await currentUser(req, env);
+  if (!user) return json({ error: "login" }, 401);
+  const token = await googleToken(env);
+  const fields = await getUserFields(env, token, user.uid);
+  if (fields.trialUsed?.booleanValue || paidUntilOf(fields) > 0) return json({ error: "usado" }, 409);
+  const until = Date.now() + 864e5;
+  await setPaidUntil(env, token, user.uid, until, "teste-gratis", "gratis");
+  const res = await fetch(`${userDoc(env, user.uid)}?updateMask.fieldPaths=trialUsed`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ fields: { trialUsed: { booleanValue: true } } }),
+  });
+  if (!res.ok) throw new Error(`firestore patch ${res.status}`);
+  return json({ ok: true, until });
 }
 
 async function webhook(req, url, env) {

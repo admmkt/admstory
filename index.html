@@ -4,82 +4,146 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ADM Story — Stories prontos com a sua marca</title>
-<meta name="description" content="Templates prontos para Stories com sua logo e suas cores. Escolha o vídeo, escreva o título e exporte em MP4 em segundos.">
-<meta name="theme-color" content="#070d1a">
+<meta name="description" content="Teste grátis por 24 horas, sem cartão. Templates prontos para Stories com sua logo e suas cores: escolha o vídeo, escreva o título e exporte em MP4.">
+<meta name="theme-color" content="#050a14">
 <link rel="icon" href="app/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
+<script>document.documentElement.classList.add("js");</script>
 <script type="module" src="site.js"></script>
 </head>
 <body>
-<header class="wrap top">
-  <a class="logo" href="./"><img src="app/icon.svg" alt="" width="34" height="34"><b>ADM Story</b></a>
-  <nav><a href="#como">Como funciona</a><a href="#planos">Planos</a><a href="#pagar">Como assinar</a><a href="#instalar">Instalar</a><a class="nav-cta" href="#conta">Minha conta</a></nav>
+<header class="top">
+  <a class="logo" href="./"><img src="app/icon.svg" alt="" width="34" height="34"><b>adm story</b></a>
+  <nav aria-label="Seções">
+    <a href="#como">Como funciona</a><a href="#modelos">Modelos</a><a href="#planos">Planos</a><a href="#pagar">Como assinar</a><a href="#instalar">Instalar</a><a href="#conta">Minha conta</a>
+    <button class="btn sm" type="button" data-teste>Testar grátis</button>
+  </nav>
 </header>
 
 <main>
-  <section class="wrap hero">
+  <section class="hero">
     <div class="hero-text">
       <p class="eyebrow">Para social media, lojas e criadores</p>
-      <h1>Stories com a sua marca, prontos em segundos.</h1>
+      <h1>Stories com a sua marca, <span>prontos em segundos.</span></h1>
       <p class="lead">Escolha o vídeo, escreva o título e pronto: o ADM Story aplica um template profissional com a sua logo e as suas cores e exporta em MP4 para postar.</p>
-      <div class="cta">
-        <a class="btn" href="#planos">Assinar agora</a>
-        <a class="btn ghost" href="app/">Já sou assinante</a>
+      <div class="trial-card">
+        <span class="trial-tag">Teste grátis</span>
+        <button class="btn big" type="button" data-teste>Testar grátis por 24 horas</button>
+        <ul class="rules">
+          <li><b>24 horas</b> para conhecer o app</li>
+          <li><b>Sem cartão</b> de crédito</li>
+          <li>Até <b>3 exportações</b></li>
+          <li>Com a marca d’água <b>“ADM Story”</b> nos stories exportados</li>
+        </ul>
+        <p class="fine">Depois do teste, assine para exportar sem marca e sem limite. <a href="#planos">Ver planos</a></p>
       </div>
-      <p class="fine">Garantia de 7 dias · Cancele quando quiser</p>
     </div>
     <div class="hero-art" aria-hidden="true">
-      <img src="img/exemplo-1.jpg" alt="" width="270" height="480">
-      <img src="img/exemplo-2.jpg" alt="" width="270" height="480">
-      <img src="img/exemplo-3.jpg" alt="" width="270" height="480">
+      <img src="img/modelos/cardapio.jpg" alt="" width="270" height="480">
+      <img src="img/modelos/oferta.jpg" alt="" width="270" height="480">
+      <img src="img/modelos/revista.jpg" alt="" width="270" height="480">
+    </div>
+    <p class="mark" aria-hidden="true">adm story</p>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div><span>teste grátis · 24 horas · sem cartão · 27 templates · 10 fontes · </span><span>teste grátis · 24 horas · sem cartão · 27 templates · 10 fontes · </span></div></div>
+
+  <section id="como" class="split">
+    <aside class="stage" aria-hidden="true">
+      <div class="phone-big"><img id="stageImg" src="img/modelos/link.jpg" alt="" width="270" height="480"></div>
+    </aside>
+    <div class="col">
+      <h2>Três gestos</h2>
+      <div class="step active" data-img="img/modelos/link.jpg">
+        <p class="say">Envie o vídeo ou a foto.</p>
+        <p>Direto do celular ou do computador. Ele não sai do seu aparelho.</p>
+        <img class="phone-only" src="img/modelos/link.jpg" alt="Story com chamada para o link de uma loja de moda" loading="lazy" width="270" height="480">
+      </div>
+      <div class="step" data-img="img/modelos/novidade.jpg">
+        <p class="say">Escolha o template.</p>
+        <p>27 modelos prontos, já com a sua logo, paleta e fonte salvas. Troque quando quiser.</p>
+        <img class="phone-only" src="img/modelos/novidade.jpg" alt="Story de novidade com selo NOVO e a logo da marca" loading="lazy" width="270" height="480">
+      </div>
+      <div class="step" data-img="img/modelos/evento.jpg">
+        <p class="say">Exporte e poste.</p>
+        <p>MP4 em 1080×1920 com áudio, pronto para o Instagram, TikTok e WhatsApp.</p>
+        <img class="phone-only" src="img/modelos/evento.jpg" alt="Story de evento com data em destaque" loading="lazy" width="270" height="480">
+      </div>
+      <p class="invite"><button class="btn" type="button" data-teste>Conhecer o app: testar grátis por 24 horas</button><span>Sem cartão. Até 3 exportações, com marca d’água.</span></p>
     </div>
   </section>
 
-  <section id="como" class="wrap">
-    <h2>Como funciona</h2>
-    <ol class="steps">
-      <li><b>Envie o vídeo</b><span>Direto do celular ou do computador. Ele não sai do seu aparelho.</span></li>
-      <li><b>Escolha o template</b><span>7 modelos prontos, já com a sua logo, paleta e fonte salvas.</span></li>
-      <li><b>Exporte e poste</b><span>MP4 em 1080×1920 com áudio, pronto para o Instagram, TikTok e WhatsApp.</span></li>
-    </ol>
+  <section id="modelos" class="vitrine">
+    <h2 class="giant" aria-label="Modelos">modelos</h2>
+    <p class="intro">27 templates prontos e 10 fontes. Estes são alguns dos novos: deslize para ver.</p>
+    <div class="reel" tabindex="0" aria-label="Vitrine de templates">
+      <figure class="tpl"><img src="img/modelos/oferta.jpg" alt="Template de story Oferta" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-1.jpg'"><figcaption>Oferta</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/contagem.jpg" alt="Template de story Contagem regressiva" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-2.jpg'"><figcaption>Contagem regressiva</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/depoimento.jpg" alt="Template de story Depoimento" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-3.jpg'"><figcaption>Depoimento</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/antes-depois.jpg" alt="Template de story Antes e depois" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-1.jpg'"><figcaption>Antes e depois</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/isso-aquilo.jpg" alt="Template de story Isso ou aquilo" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-2.jpg'"><figcaption>Isso ou aquilo</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/perguntas.jpg" alt="Template de story Perguntas" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-3.jpg'"><figcaption>Perguntas</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/bastidores.jpg" alt="Template de story Bastidores" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-1.jpg'"><figcaption>Bastidores</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/revista.jpg" alt="Template de story Capa de revista" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-2.jpg'"><figcaption>Capa de revista</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/colagem.jpg" alt="Template de story Colagem" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-3.jpg'"><figcaption>Colagem</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/tipografia.jpg" alt="Template de story Tipografia" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-1.jpg'"><figcaption>Tipografia</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/polaroid.jpg" alt="Template de story Polaroid" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-2.jpg'"><figcaption>Polaroid</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/novidade.jpg" alt="Template de story Novidade" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-3.jpg'"><figcaption>Novidade</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/dicas.jpg" alt="Template de story Dicas" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-1.jpg'"><figcaption>Dicas</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/cardapio.jpg" alt="Template de story Cardápio" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-2.jpg'"><figcaption>Cardápio</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/evento.jpg" alt="Template de story Evento" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-3.jpg'"><figcaption>Evento</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/link.jpg" alt="Template de story Link na bio" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-1.jpg'"><figcaption>Link na bio</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/frase.jpg" alt="Template de story Frase" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-2.jpg'"><figcaption>Frase</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/conversa.jpg" alt="Template de story Conversa" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-3.jpg'"><figcaption>Conversa</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/cupom.jpg" alt="Template de story Cupom" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-1.jpg'"><figcaption>Cupom</figcaption></figure>
+      <figure class="tpl"><img src="img/modelos/serie.jpg" alt="Template de story Série" width="270" height="480" loading="lazy" onerror="this.onerror=null;this.src='img/exemplo-2.jpg'"><figcaption>Série</figcaption></figure>
+    </div>
+    <p class="invite"><button class="btn" type="button" data-teste>Testar todos grátis por 24 horas</button><span>Sem cartão de crédito.</span></p>
   </section>
 
-  <section class="wrap">
+  <section class="feat">
     <h2>Tudo o que você precisa, nada que atrapalhe</h2>
-    <div class="features">
-      <div><b>Templates prontos</b><span>Faixa, degradê, cartão, moldura, etiqueta, manchete e minimalista.</span></div>
-      <div><b>Sua identidade</b><span>Sua logo, 8 paletas prontas ou as cores exatas da marca, e 3 estilos de fonte.</span></div>
-      <div><b>Exportação rápida</b><span>O vídeo sai mais rápido que a própria duração, sem perder qualidade.</span></div>
-      <div><b>Tudo salvo</b><span>Abra amanhã e continue de onde parou. Um toque em "Limpar" começa do zero.</span></div>
-      <div><b>Celular e computador</b><span>Funciona no navegador e pode ser instalado como app.</span></div>
-      <div><b>Sempre atualizado</b><span>Novos recursos chegam sozinhos, sem baixar nada.</span></div>
-    </div>
+    <ul class="flist">
+      <li><b>Templates prontos</b><span>27 modelos: oferta, contagem, depoimento, antes e depois, cardápio, cupom e muito mais.</span></li>
+      <li><b>Sua identidade</b><span>Sua logo, 8 paletas prontas ou as cores exatas da marca, e 10 estilos de fonte.</span></li>
+      <li><b>Exportação rápida</b><span>O vídeo sai mais rápido que a própria duração, sem perder qualidade.</span></li>
+      <li><b>Tudo salvo</b><span>Abra amanhã e continue de onde parou. Um toque em “Limpar” começa do zero.</span></li>
+      <li><b>Celular e computador</b><span>Funciona no navegador e pode ser instalado como app.</span></li>
+      <li><b>Sempre atualizado</b><span>Novos recursos chegam sozinhos, sem baixar nada.</span></li>
+    </ul>
   </section>
 
-  <section id="planos" class="wrap">
-    <h2>Planos</h2>
+  <section id="planos" class="plans-sec">
+    <h2>Comece grátis, assine quando quiser</h2>
     <div class="plans">
+      <div class="plan trial">
+        <span class="badge">24 horas grátis</span>
+        <h3>Teste</h3>
+        <p class="price">R$ 0</p>
+        <p>Sem cartão. Até 3 exportações, com a marca d’água “ADM Story”. Não renova nem cobra nada.</p>
+        <button class="btn" type="button" data-teste>Testar grátis por 24 horas</button>
+      </div>
       <div class="plan">
         <h3>Mensal</h3>
         <p class="price">R$ 29,90<small>/mês</small></p>
-        <p>Todos os recursos. Renova todo mês, cancele quando quiser.</p>
+        <p>Sem marca d’água e sem limite de exportações. Renova todo mês, cancele quando quiser.</p>
         <a class="btn ghost" href="#conta" data-plano="mensal">Assinar mensal</a>
       </div>
       <div class="plan featured">
         <span class="badge">Economize 30%</span>
         <h3>Anual</h3>
         <p class="price">R$ 249<small>/ano</small></p>
-        <p>Equivale a R$ 20,75 por mês. Todos os recursos por 12 meses.</p>
+        <p>Equivale a R$ 20,75 por mês. Sem marca d’água e sem limite por 12 meses.</p>
         <a class="btn" href="#conta" data-plano="anual">Assinar anual</a>
       </div>
     </div>
-    <p class="fine center">Pagamento com cartão pelo Mercado Pago. Garantia de 7 dias: se não gostar, devolvemos o valor integral.</p>
+    <p class="fine center">Pagamento com cartão pelo Mercado Pago. Garantia de 7 dias após a 1ª cobrança: se não gostar, devolvemos o valor integral.</p>
   </section>
 
-  <section id="pagar" class="wrap">
+  <section id="pagar" class="sec">
     <p class="eyebrow">Passo a passo</p>
     <h2>Como assinar em 2 minutos</h2>
     <ol class="timeline">
@@ -107,11 +171,11 @@
     <p class="tip"><b>Dica:</b> a renovação é automática no mesmo cartão. Para parar, toque em <em>Cancelar renovação automática</em> em Minha conta. Você continua usando até o fim do período pago.</p>
   </section>
 
-  <section id="instalar" class="wrap">
+  <section id="instalar" class="sec">
     <p class="eyebrow">Como um app de verdade</p>
     <h2>Coloque o ADM Story na tela de início</h2>
     <p class="sub">Sem loja de aplicativos e sem ocupar espaço: um ícone na tela do celular que abre o editor em tela cheia.</p>
-    <div class="tabs" role="tablist">
+<div class="tabs" role="tablist">
       <button role="tab" id="tab-ios" aria-controls="p-ios" aria-selected="true">iPhone</button>
       <button role="tab" id="tab-android" aria-controls="p-android" aria-selected="false">Android</button>
     </div>
@@ -190,14 +254,15 @@
         <p>O ícone aparece na tela inicial e na lista de apps. Abra por ele e entre com sua conta.</p>
       </div>
     </div>
+    
     <p class="fine center">No computador, abra o app no Chrome ou no Edge e clique no ícone de instalar na barra de endereço.</p>
   </section>
 
-  <section id="conta" class="wrap">
+  <section id="conta" class="sec">
     <h2>Minha conta</h2>
     <div class="card">
       <form id="login">
-        <p>Entre ou crie sua conta. A assinatura fica ligada a ela, e é com ela que você entra no app.</p>
+        <p>Entre ou crie sua conta. O teste grátis e a assinatura ficam ligados a ela, e é com ela que você entra no app.</p>
         <label>E-mail <input id="email" type="email" autocomplete="email" required></label>
         <label>Senha <input id="senha" type="password" autocomplete="current-password" minlength="6" required></label>
         <div class="row">
@@ -217,6 +282,7 @@
         </div>
 
         <div id="assinarBox" hidden>
+          <a id="abrirTeste" class="btn ghost" href="app/" hidden>Abrir o app (teste)</a>
           <fieldset class="choose">
             <legend>Escolha o plano</legend>
             <label><input type="radio" name="plano" value="mensal"> <span><b>Mensal</b> R$ 29,90/mês</span></label>
@@ -239,20 +305,48 @@
     </div>
   </section>
 
-  <section id="duvidas" class="wrap">
+  <section id="duvidas" class="faq">
     <h2>Dúvidas</h2>
-    <details><summary>Como funciona a garantia?</summary><p>Você tem 7 dias depois do primeiro pagamento para pedir o reembolso integral, sem precisar explicar o motivo. É só escrever para o nosso e-mail de contato.</p></details>
-    <details><summary>Posso cancelar quando quiser?</summary><p>Sim. Em "Minha conta" há o botão de cancelar a renovação. Você continua usando até o fim do período já pago.</p></details>
-    <details><summary>Meus vídeos são enviados para algum servidor?</summary><p>Não. O vídeo é processado no seu próprio aparelho, e só você tem acesso a ele.</p></details>
-    <details><summary>Funciona no celular?</summary><p>Sim, no Chrome, no Edge e no Safari atualizados, no celular ou no computador. Dá para instalar como app pela opção "Adicionar à tela inicial".</p></details>
+    <div class="answers">
+      <details><summary>Como funciona o teste grátis?</summary><p>Você cria a conta, toca em “Testar grátis por 24 horas” e usa o app por 24 horas, sem informar cartão. São até 3 exportações, com a marca d’água “ADM Story” nos stories exportados. O teste é uma vez por conta e não renova nem cobra nada.</p></details>
+      <details><summary>E depois das 24 horas?</summary><p>Para continuar, é só assinar: sem marca d’água e sem limite de exportações. Se não assinar, nada é cobrado.</p></details>
+      <details><summary>Como funciona a garantia?</summary><p>Você tem 7 dias depois da primeira cobrança para pedir o reembolso integral (CDC, art. 49), sem precisar explicar o motivo. É só escrever para o nosso e-mail de contato.</p></details>
+      <details><summary>Posso cancelar quando quiser?</summary><p>Sim. Em “Minha conta” há o botão de cancelar a renovação. Você continua usando até o fim do período já pago.</p></details>
+      <details><summary>Meus vídeos são enviados para algum servidor?</summary><p>Não. O vídeo é processado no seu próprio aparelho, e só você tem acesso a ele.</p></details>
+      <details><summary>Funciona no celular?</summary><p>Sim, no Chrome, no Edge e no Safari atualizados, no celular ou no computador. Dá para instalar como app pela opção “Adicionar à tela inicial”.</p></details>
+    </div>
+  </section>
+
+  <section class="final">
+    <p>Seu primeiro story pronto em minutos.</p>
+    <button class="btn big" type="button" data-teste>Testar grátis por 24 horas</button>
+    <span class="fine">Sem cartão · até 3 exportações · marca d’água “ADM Story” durante o teste</span>
   </section>
 </main>
 
-<footer class="wrap foot">
-  <span>© ADM Story</span>
-  <a href="termos.html">Termos de uso e privacidade</a>
-  <a href="mailto:adm.mkt.contato@gmail.com">Contato</a>
-  <span class="madeby">Criado por <img src="img/adm-digital.png" alt="" width="18" height="20"> <b>ADM Digital</b></span>
+<dialog id="testeDlg" aria-labelledby="testeTitulo">
+  <h2 id="testeTitulo"></h2>
+  <p id="testeTexto"></p>
+  <div class="dlg-actions" id="testeAcoes"></div>
+  <button class="link" type="button" id="testeFechar">Fechar</button>
+</dialog>
+
+<footer class="foot">
+  <div class="foot-menu">
+    <p class="small-mark">adm story</p>
+    <ul>
+      <li><a href="#como">Como funciona</a></li>
+      <li><a href="#modelos">Modelos</a></li>
+      <li><a href="#planos">Planos</a></li>
+      <li><a href="#conta">Minha conta</a></li>
+      <li><a href="termos.html">Termos de uso e privacidade</a></li>
+    </ul>
+    <div class="foot-info">
+      <a href="mailto:adm.mkt.contato@gmail.com">adm.mkt.contato@gmail.com</a>
+      <span>© ADM Story</span>
+      <span class="madeby">Criado por <img src="img/adm-digital.png" alt="" width="18" height="20"> <b>ADM Digital</b></span>
+    </div>
+  </div>
 </footer>
 </body>
 </html>

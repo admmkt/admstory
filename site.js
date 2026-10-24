@@ -3,6 +3,8 @@ import { onUser, entrar, criarConta, esqueciSenha, sair, ouvirPlano, chamarWorke
 const $ = id => document.getElementById(id);
 const say = text => { $("msg").textContent = text; };
 
+const quando = ms => new Date(ms).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"});
+
 const ERROS = {
   "auth/invalid-credential": "E-mail ou senha incorretos.",
   "auth/email-already-in-use": "Já existe conta com este e-mail. Use Entrar.",
@@ -38,9 +40,11 @@ $("esqueci").onclick = () => {
 };
 $("sair").onclick = () => sair();
 
-let stopPlan = null;
+let stopPlan = null, logado = false, testePendente = false;
 onUser(user => {
   stopPlan?.(); stopPlan = null;
+  logado = !!user;
+  if(user && testePendente){ testePendente = false; iniciarTeste(); }
   $("login").hidden = !!user;
   $("painel").hidden = !user;
   if(!user) return;
@@ -52,14 +56,19 @@ onUser(user => {
   }
   // Atualiza sozinho quando o servidor confirma o pagamento.
   stopPlan = ouvirPlano(user.uid, ({until, plan}) => {
-    const ativo = until > Date.now();
+    const valido = until > Date.now();
+    const teste = plan === "gratis";
+    const ativo = valido && !teste;
     const nome = plan === "anual" ? "Plano anual" : plan === "mensal" ? "Plano mensal" : "Assinatura";
-    $("status").textContent = ativo
-      ? `${nome} ativo até ${new Date(until).toLocaleDateString("pt-BR")}.`
+    $("status").textContent = teste && valido
+      ? `Teste grátis até ${quando(until)}. Assine para exportar sem marca d'água e sem limite.`
+      : teste ? "Seu teste grátis terminou. Assine para continuar exportando."
+      : ativo ? `${nome} ativo até ${new Date(until).toLocaleDateString("pt-BR")}.`
       : "Você ainda não tem assinatura ativa.";
-    $("status").classList.toggle("ok", ativo);
+    $("status").classList.toggle("ok", valido);
     $("ativoBox").hidden = !ativo;
     $("assinarBox").hidden = ativo;
+    $("abrirTeste").hidden = !(teste && valido);
     if(ativo && new URLSearchParams(location.search).has("pago")) say("Tudo certo! Sua assinatura está ativa.");
   }, () => say("Não foi possível ler sua assinatura agora."));
 });
@@ -135,3 +144,52 @@ function abrirAba(tab){
 }
 abas.forEach(t => t.onclick = () => abrirAba(t));
 if(/android/i.test(navigator.userAgent)) abrirAba($("tab-android"));
+
+// Teste grátis de 24 h: Worker /teste. Resultado num diálogo.
+const dlg = $("testeDlg");
+function mostrar(titulo, texto, botoes = []){
+  $("testeTitulo").textContent = titulo;
+  $("testeTexto").textContent = texto;
+  $("testeAcoes").replaceChildren(...botoes.map(([rotulo, href, ghost, fn]) => {
+    const a = document.createElement("a");
+    a.className = "btn" + (ghost ? " ghost" : "");
+    a.href = href; a.textContent = rotulo;
+    a.onclick = () => { dlg.close(); fn?.(); };
+    return a;
+  }));
+  if(!dlg.open) dlg.showModal();
+}
+$("testeFechar").onclick = () => dlg.close();
+const planos = ["Ver planos", "#planos", true];
+
+async function iniciarTeste(){
+  if(!logado){
+    testePendente = true;
+    mostrar("Crie sua conta para testar", "O teste grátis de 24 horas fica ligado à sua conta e não pede cartão. Crie a conta ou entre; o teste começa logo em seguida.",
+      [["Criar conta ou entrar", "#conta", false, () => setTimeout(() => $("email").focus(), 400)]]);
+    return;
+  }
+  mostrar("Ativando o teste…", "Só um instante.");
+  try{
+    const {ok, status, data} = await chamarWorker("/teste");
+    if(ok && data.ok) mostrar("Teste grátis ativado!", `Você pode usar o app até ${quando(data.until)}: até 3 exportações, com a marca d'água "ADM Story". Depois, assine para exportar sem marca e sem limite.`, [["Abrir o app", "app/"]]);
+    else if(status === 409 && data.error === "usado") mostrar("Você já usou o teste grátis nesta conta", "O teste é uma vez por conta. Assine para exportar sem marca d'água e sem limite.", [planos]);
+    else if(status === 401) mostrar("Entre na sua conta", "Sua sessão expirou. Entre de novo para ativar o teste.", [["Entrar", "#conta"]]);
+    else mostrar("Não foi possível ativar o teste", "Confira a internet e tente de novo.");
+  }catch{
+    mostrar("Não foi possível ativar o teste", "Confira a internet e tente de novo.");
+  }
+}
+document.querySelectorAll("[data-teste]").forEach(b => b.addEventListener("click", iniciarTeste));
+
+// Vitrine "Três gestos": a imagem do palco troca conforme o passo visível.
+const stageImg = $("stageImg");
+if("IntersectionObserver" in window){
+  const passos = [...document.querySelectorAll(".step")];
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if(!e.isIntersecting) return;
+    passos.forEach(p => p.classList.toggle("active", p === e.target));
+    stageImg.src = e.target.dataset.img;
+  }), {rootMargin: "-45% 0px -45% 0px"});
+  passos.forEach(p => io.observe(p));
+}

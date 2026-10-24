@@ -26,17 +26,24 @@ onUser(async user => {
     return;
   }
   const key = "admstory.paidUntil." + user.uid;
-  let until;
+  let until, plan = "";
   try{
-    until = (await lerPlano(user.uid)).until;
+    ({until, plan} = await lerPlano(user.uid));
     try{ localStorage.setItem(key, String(until)); }catch(e){}
   }catch(e){
     // sem internet: vale a última validade conhecida, para o app funcionar offline
     try{ until = Number(localStorage.getItem(key)) || 0; }catch(e2){ until = 0; }
   }
+  // app.js usa para a marca d'água e o limite do teste grátis
+  try{
+    if(plan) localStorage.setItem(key + ".plan", plan);
+    else plan = localStorage.getItem(key + ".plan") || ""; // offline: último plano conhecido
+  }catch(e){}
+  window.admPlano = {uid: user.uid, plan};
+  window.dispatchEvent(new Event("admplano"));
   if(until > Date.now()){
     gate.hidden = true;
   }else{
-    bloquear("Assinatura inativa", `A conta ${user.email} não tem assinatura ativa. Assine ou renove para continuar.`, "Ver planos");
+    bloquear(plan === "gratis" ? "Seu teste grátis terminou" : "Assinatura inativa", plan === "gratis" ? "Gostou? Assine para continuar criando stories sem marca d'água e sem limite." : `A conta ${user.email} não tem assinatura ativa. Assine ou renove para continuar.`, "Ver planos");
   }
 });
