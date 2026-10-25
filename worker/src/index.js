@@ -7,6 +7,7 @@
 //   POST /chave     — chave mestra de teste (segredo MASTER_KEY): libera 3 dias para a conta logada.
 //   POST /webhook   — o Mercado Pago avisa; conferimos a assinatura HMAC, consultamos a API do MP
 //                     (fonte da verdade, nunca o corpo do aviso) e gravamos users/{uid}.paidUntil.
+//                     Reembolso/estorno: recalcula pelo MP e tira o acesso (plano "reembolsado").
 // Não guardamos dado de cartão nem cadastro: só uid, id da assinatura, plano e validade.
 
 const MP = "https://api.mercadopago.com";
@@ -126,9 +127,9 @@ async function webhook(req, url, env) {
   const type = url.searchParams.get("type");
   if (type === "payment") {
     const pay = await mp(env, "GET", `/v1/payments/${encodeURIComponent(dataId)}`);
-    if (!isLifetimePayment(pay)) return new Response("ignorado");
-    await grantLifetime(env, pay);
-    return new Response("ok");
+    if (isLifetimePayment(pay)) { await grantLifetime(env, pay); return new Response("ok"); }
+    if (isRefund(pay)) { await recheck(env, pay.external_reference); return new Response("ok"); }
+    return new Response("ignorado");
   }
   let preapprovalId;
   if (type === "subscription_preapproval") preapprovalId = dataId;
@@ -164,6 +165,29 @@ async function verify(req, env) {
 export const isLifetimePayment = p => p.status === "approved" && p.metadata?.plano === "vitalicio"
   && /^[A-Za-z0-9]{1,128}$/.test(p.external_reference || "");
 
+export const isRefund = p => (p.status === "refunded" || p.status === "charged_back")
+  && /^[A-Za-z0-9]{1,128}$/.test(p.external_reference || "");
+
+// Único lugar que encurta a validade: depois de reembolso ou estorno, refaz a conta pelo MP.
+// Se nada pago sobrar, tira o acesso e cancela a renovação para não cobrar de novo.
+async function recheck(env, uid) {
+  const token = await googleToken(env);
+  const fields = await getUserFields(env, token, uid);
+  if (!["mensal", "anual", "vitalicio"].includes(fields.plan?.stringValue)) return; // teste e chave: nada a tirar
+  const { results = [] } = await mp(env, "GET", `/v1/payments/search?external_reference=${encodeURIComponent(uid)}&status=approved`);
+  if (results.some(p => p.external_reference === uid && isLifetimePayment(p))) return; // ainda tem vitalício pago
+  const subs = await userSubs(env, uid);
+  const { until, subId, plan } = await subscriptionUntil(env, subs);
+  if (until > Date.now()) {
+    if (until !== paidUntilOf(fields)) await setPaidUntil(env, token, uid, until, subId, plan);
+    return;
+  }
+  await setPaidUntil(env, token, uid, Date.now(), "reembolso", "reembolsado");
+  for (const s of subs.filter(s => s.status === "authorized" || s.status === "paused")) {
+    await mp(env, "PUT", `/preapproval/${encodeURIComponent(s.id)}`, { status: "cancelled" });
+  }
+}
+
 async function grantLifetime(env, pay) {
   const token = await googleToken(env);
   if (LIFETIME > await getPaidUntil(env, token, pay.external_reference)) {
@@ -181,8 +205,8 @@ async function cancel(req, env) {
   return json({ ok: true, canceladas: active.length });
 }
 
-/** Grava paidUntil a partir dos pagamentos aprovados das assinaturas. Devolve true se há validade. */
-async function syncSubscription(env, uid, subs) {
+/** Maior validade entre as assinaturas, contando só cobranças aprovadas (reembolsada não conta). */
+async function subscriptionUntil(env, subs) {
   let until = 0, subId = "", plan = "";
   for (const sub of subs) {
     const { results = [] } = await mp(env, "GET", `/authorized_payments/search?preapproval_id=${encodeURIComponent(sub.id)}`);
@@ -190,6 +214,12 @@ async function syncSubscription(env, uid, subs) {
     const u = paidUntilFrom(results, months);
     if (u > until) { until = u; subId = String(sub.id); plan = months === 12 ? "anual" : "mensal"; }
   }
+  return { until, subId, plan };
+}
+
+/** Grava paidUntil a partir dos pagamentos aprovados das assinaturas. Devolve true se há validade. */
+async function syncSubscription(env, uid, subs) {
+  const { until, subId, plan } = await subscriptionUntil(env, subs);
   if (!until) return false;
   // Reenvio do mesmo aviso é inofensivo: o estado vem sempre da API. Nunca encurta a validade
   // (ex.: assinatura antiga cancelada enquanto existe uma nova em dia).
