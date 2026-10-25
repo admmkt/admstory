@@ -3,6 +3,9 @@ import { onUser, entrar, criarConta, esqueciSenha, sair, ouvirPlano, chamarWorke
 const $ = id => document.getElementById(id);
 const say = text => { $("msg").textContent = text; };
 
+const PRECOS = {mensal: 29.90, anual: 249, vitalicio: 97}; // mesmos valores do wrangler.toml
+const pixel = (...a) => window.fbq?.(...a); // Pixel da Meta (index.html); sem ID não faz nada
+
 const quando = ms => new Date(ms).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"});
 
 const ERROS = {
@@ -30,7 +33,7 @@ $("criar").onclick = () => {
   say("");
   testePendente = true; // o teste grátis começa assim que a conta é criada (onUser chama iniciarTeste)
   criarConta($("email").value.trim(), $("senha").value)
-    .then(() => say("Conta criada! Enviamos um link de confirmação para o seu e-mail."))
+    .then(() => { pixel("track", "CompleteRegistration"); say("Conta criada! Enviamos um link de confirmação para o seu e-mail."); })
     .catch(e => { testePendente = false; erro(e); });
 };
 $("esqueci").onclick = () => {
@@ -61,16 +64,23 @@ onUser(user => {
     const teste = plan === "gratis";
     const ativo = valido && !teste;
     const nome = plan === "anual" ? "Plano anual" : plan === "mensal" ? "Plano mensal" : "Assinatura";
+    const vitalicio = plan === "vitalicio";
     $("status").textContent = teste && valido
       ? `Teste grátis até ${quando(until)}. Assine para exportar sem marca d'água e sem limite.`
       : teste ? "Seu teste grátis terminou. Assine para continuar exportando."
+      : ativo && vitalicio ? "Acesso vitalício ativo. Obrigado!"
       : ativo ? `${nome} ativo até ${new Date(until).toLocaleDateString("pt-BR")}.`
       : "Você ainda não tem assinatura ativa.";
     $("status").classList.toggle("ok", valido);
     $("ativoBox").hidden = !ativo;
     $("assinarBox").hidden = ativo;
+    $("cancelarBtn").hidden = vitalicio;
     $("abrirTeste").hidden = !(teste && valido);
-    if(ativo && new URLSearchParams(location.search).has("pago")) say("Tudo certo! Sua assinatura está ativa.");
+    if(ativo && new URLSearchParams(location.search).has("pago")){
+      say("Tudo certo! Sua assinatura está ativa.");
+      pixel("track", "Purchase", {value: PRECOS[plan] || 0, currency: "BRL", content_name: plan});
+      history.replaceState(null, "", location.pathname + location.hash); // não conta a compra de novo
+    }
   }, () => say("Não foi possível ler sua assinatura agora."));
 });
 
@@ -80,6 +90,7 @@ $("assinarBtn").onclick = async () => {
   say("");
   try{
     const plano = document.querySelector("input[name=plano]:checked").value;
+    pixel("track", "InitiateCheckout", {value: PRECOS[plano], currency: "BRL", content_name: plano});
     const {ok, data} = await chamarWorker("/checkout", {plano, payerEmail: $("mpEmail").value.trim()});
     if(!ok || !data.url?.startsWith("https://")) throw new Error(data.error);
     location.href = data.url;
@@ -173,6 +184,7 @@ async function iniciarTeste(){
   mostrar("Ativando o teste…", "Só um instante.");
   try{
     const {ok, status, data} = await chamarWorker("/teste");
+    if(ok && data.ok) pixel("track", "StartTrial", {value: 0, currency: "BRL"});
     if(ok && data.ok) mostrar("Teste grátis ativado!", `Você pode usar o app até ${quando(data.until)}: até 3 exportações, com a marca d'água "ADM Story". Depois, assine para exportar sem marca e sem limite.`, [["Começar a usar", "app/"]]);
     else if(status === 409 && data.error === "usado") mostrar("Você já usou o teste grátis nesta conta", "O teste é uma vez por conta. Assine para exportar sem marca d'água e sem limite.", [planos]);
     else if(status === 401) mostrar("Entre na sua conta", "Sua sessão expirou. Entre de novo para ativar o teste.", [["Entrar", "#conta"]]);

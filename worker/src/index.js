@@ -1,5 +1,6 @@
 // Servidor de pagamentos do ADM Story (Cloudflare Worker). Adaptado do Rota Segura.
-//   POST /checkout  — usuário logado (token do Firebase) escolhe o plano e recebe o link de assinatura do Mercado Pago.
+//   POST /checkout  — usuário logado (token do Firebase) escolhe o plano e recebe o link de assinatura do Mercado Pago
+//                     (vitalício: link de pagamento único do Checkout Pro, aceita Pix).
 //   POST /verificar — usuário logado pede para conferir no MP (caso o aviso do webhook tenha se perdido).
 //   POST /cancelar  — usuário logado cancela a renovação; o período já pago continua valendo.
 //   POST /teste     — teste grátis de 24 h, 1 vez por conta que nunca teve validade (plano "gratis": marca d'água e 3 exportações no app).
@@ -14,7 +15,9 @@ const GRACE_MS = 3 * 864e5; // tolerância para a cobrança seguinte cair
 export const PLANS = {
   mensal: { months: 1, label: "mensal", price: env => Number(env.PRICE_MENSAL) },
   anual: { months: 12, label: "anual", price: env => Number(env.PRICE_ANUAL) },
+  vitalicio: { label: "vitalício", price: env => Number(env.PRICE_VITALICIO), unico: true },
 };
+export const LIFETIME = Date.UTC(2100, 0, 1); // validade do acesso vitalício
 
 export default {
   async fetch(req, env) {
@@ -51,6 +54,19 @@ async function checkout(req, env) {
   // O MP exige que quem paga esteja logado no MP com este e-mail; pode ser diferente do e-mail da conta.
   const payerEmail = String(body.payerEmail || user.email || "").trim().toLowerCase();
   if (!/^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/.test(payerEmail)) return json({ error: "email" }, 400);
+
+  if (plan.unico) {
+    const pref = await mp(env, "POST", "/checkout/preferences", {
+      items: [{ title: "ADM Story — acesso vitalício", quantity: 1, unit_price: plan.price(env), currency_id: "BRL" }],
+      external_reference: user.uid,
+      metadata: { plano: "vitalicio" },
+      payer: { email: payerEmail },
+      back_urls: { success: env.SITE_URL + "?pago=1#conta", pending: env.SITE_URL + "?pago=1#conta", failure: env.SITE_URL + "#conta" },
+      auto_return: "approved",
+      notification_url: new URL("/webhook?source_news=webhooks", req.url).href, // só o formato novo (com x-signature)
+    });
+    return json({ url: pref.init_point });
+  }
 
   const sub = await mp(env, "POST", "/preapproval", {
     reason: `ADM Story — plano ${plan.label}`,
@@ -108,6 +124,12 @@ async function webhook(req, url, env) {
   if (!ok) return new Response("assinatura inválida", { status: 401 });
 
   const type = url.searchParams.get("type");
+  if (type === "payment") {
+    const pay = await mp(env, "GET", `/v1/payments/${encodeURIComponent(dataId)}`);
+    if (!isLifetimePayment(pay)) return new Response("ignorado");
+    await grantLifetime(env, pay);
+    return new Response("ok");
+  }
   let preapprovalId;
   if (type === "subscription_preapproval") preapprovalId = dataId;
   else if (type === "subscription_authorized_payment") preapprovalId = (await mp(env, "GET", `/authorized_payments/${encodeURIComponent(dataId)}`)).preapproval_id;
@@ -131,7 +153,22 @@ const userSubs = async (env, uid) => {
 async function verify(req, env) {
   const user = await currentUser(req, env);
   if (!user) return json({ error: "login" }, 401);
+  const { results = [] } = await mp(env, "GET", `/v1/payments/search?external_reference=${encodeURIComponent(user.uid)}&status=approved`);
+  const pay = results.find(p => p.external_reference === user.uid && isLifetimePayment(p));
+  if (pay) { await grantLifetime(env, pay); return json({ ok: true }); }
   return json({ ok: await syncSubscription(env, user.uid, await userSubs(env, user.uid)) });
+}
+
+// Só libera pagamento aprovado criado pelo nosso /checkout (metadata) e com usuário válido.
+// shortcut: reembolso não tira o vitalício sozinho; quem reembolsar apaga paidUntil no Firestore à mão.
+export const isLifetimePayment = p => p.status === "approved" && p.metadata?.plano === "vitalicio"
+  && /^[A-Za-z0-9]{1,128}$/.test(p.external_reference || "");
+
+async function grantLifetime(env, pay) {
+  const token = await googleToken(env);
+  if (LIFETIME > await getPaidUntil(env, token, pay.external_reference)) {
+    await setPaidUntil(env, token, pay.external_reference, LIFETIME, "pagamento-" + pay.id, "vitalicio");
+  }
 }
 
 // Cancela a renovação automática. paidUntil não muda: o período pago vale até o fim.
