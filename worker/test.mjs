@@ -40,3 +40,11 @@ assert.equal(isLifetimePayment({ status: "pending", metadata: { plano: "vitalici
 assert.equal(isLifetimePayment({ status: "approved", metadata: {}, external_reference: "uid123" }), false);
 assert.equal(isLifetimePayment({ status: "approved", metadata: { plano: "vitalicio" }, external_reference: "a/b" }), false);
 console.log("vitalício ok");
+
+// Reembolso: só estorno/reembolso com usuário válido dispara a revisão.
+import { isRefund } from "./src/index.js";
+assert.equal(isRefund({ status: "refunded", external_reference: "uid123" }), true);
+assert.equal(isRefund({ status: "charged_back", external_reference: "uid123" }), true);
+assert.equal(isRefund({ status: "approved", external_reference: "uid123" }), false);
+assert.equal(isRefund({ status: "refunded", external_reference: "" }), false);
+console.log("reembolso ok");
