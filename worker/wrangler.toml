@@ -8,6 +8,7 @@ SITE_ORIGIN = "https://admmkt.github.io"
 SITE_URL = "https://admmkt.github.io/admstory/"
 PRICE_MENSAL = "29.90" # em reais — mudar também em index.html (site)
 PRICE_ANUAL = "249.00"
+PRICE_VITALICIO = "97.00" # pagamento único (Pix ou cartão)
 
 # Segredos (nunca no Git), via `npx wrangler secret put <NOME>`:
 #   MP_ACCESS_TOKEN    — Mercado Pago > Suas integrações > Credenciais de produção

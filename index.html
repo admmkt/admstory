@@ -12,6 +12,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 <script>document.documentElement.classList.add("js");</script>
+<script>
+// Pixel da Meta: cole o ID (Gerenciador de Eventos > Fontes de dados). Vazio = desligado.
+const PIXEL_ID = "1612298807291227";
+if(PIXEL_ID){
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', PIXEL_ID);
+fbq('track', 'PageView');
+}
+</script>
 <script type="module" src="site.js"></script>
 </head>
 <body>
@@ -139,8 +148,15 @@
         <p>Equivale a R$ 20,75 por mês. Sem marca d’água e sem limite por 12 meses.</p>
         <a class="btn" href="#conta" data-plano="anual">Assinar anual</a>
       </div>
+      <div class="plan">
+        <span class="badge">Oferta de lançamento</span>
+        <h3>Vitalício</h3>
+        <p class="price">R$ 97<small> uma vez</small></p>
+        <p>Paga uma vez só, no Pix ou no cartão, e usa para sempre. Sem mensalidade, sem marca d’água e sem limite.</p>
+        <a class="btn ghost" href="#conta" data-plano="vitalicio">Comprar vitalício</a>
+      </div>
     </div>
-    <p class="fine center">Pagamento com cartão pelo Mercado Pago. Garantia de 7 dias após a 1ª cobrança: se não gostar, devolvemos o valor integral.</p>
+    <p class="fine center">Assinaturas no cartão; vitalício no Pix ou no cartão, tudo pelo Mercado Pago. Garantia de 7 dias após a 1ª cobrança: se não gostar, devolvemos o valor integral.</p>
   </section>
 
   <section id="pagar" class="sec">
@@ -153,7 +169,7 @@
       </li>
       <li>
         <span class="t-ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg></span>
-        <div><b>Escolha o plano</b><p>Mensal (R$ 29,90) ou anual (R$ 249, sai R$ 20,75 por mês).</p></div>
+        <div><b>Escolha o plano</b><p>Mensal (R$ 29,90), anual (R$ 249, sai R$ 20,75 por mês) ou vitalício (R$ 97 uma vez só, aceita Pix).</p></div>
       </li>
       <li>
         <span class="t-ico"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></span>
@@ -287,12 +303,13 @@
             <legend>Escolha o plano</legend>
             <label><input type="radio" name="plano" value="mensal"> <span><b>Mensal</b> R$ 29,90/mês</span></label>
             <label><input type="radio" name="plano" value="anual" checked> <span><b>Anual</b> R$ 249/ano <em>economize 30%</em></span></label>
+            <label><input type="radio" name="plano" value="vitalicio"> <span><b>Vitalício</b> R$ 97 uma vez <em>Pix ou cartão</em></span></label>
           </fieldset>
           <label>E-mail para o pagamento <input id="mpEmail" type="email" autocomplete="email"></label>
           <p class="fine">Não precisa ter conta no Mercado Pago: dá para pagar só com o cartão de crédito. Se você tem conta lá, pode usar o e-mail dela.</p>
           <button id="assinarBtn" class="btn" type="button">Ir para o pagamento</button>
           <button id="verificarBtn" class="link" type="button">Já paguei — verificar pagamento</button>
-          <p class="fine">Pagamento seguro com cartão de crédito, processado pelo Mercado Pago. Não vemos nem guardamos os dados do seu cartão. Ao assinar você aceita os <a href="termos.html">termos de uso</a>.</p>
+          <p class="fine">Pagamento seguro processado pelo Mercado Pago (vitalício também no Pix). Não vemos nem guardamos os dados do seu cartão. Ao assinar você aceita os <a href="termos.html">termos de uso</a>.</p>
         </div>
 
         <details>

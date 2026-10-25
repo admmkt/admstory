@@ -32,3 +32,11 @@ assert.equal(
   Date.parse("2027-10-04T00:00:00Z"),
 );
 console.log("anual ok");
+
+// Vitalício: só pagamento aprovado vindo do nosso checkout.
+import { isLifetimePayment } from "./src/index.js";
+assert.equal(isLifetimePayment({ status: "approved", metadata: { plano: "vitalicio" }, external_reference: "uid123" }), true);
+assert.equal(isLifetimePayment({ status: "pending", metadata: { plano: "vitalicio" }, external_reference: "uid123" }), false);
+assert.equal(isLifetimePayment({ status: "approved", metadata: {}, external_reference: "uid123" }), false);
+assert.equal(isLifetimePayment({ status: "approved", metadata: { plano: "vitalicio" }, external_reference: "a/b" }), false);
+console.log("vitalício ok");

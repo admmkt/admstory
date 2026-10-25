@@ -116,7 +116,8 @@ nav a:hover{color:#fff;}
 
 /* planos */
 .plans-sec{background:var(--night);}
-.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;max-width:1080px;margin:0 auto;}
+.plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;max-width:1240px;margin:0 auto;}
+@media (max-width:1180px){.plans{grid-template-columns:repeat(2,minmax(0,1fr));max-width:860px;}}
 .plan{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;align-items:flex-start;}
 .plan.trial{background:linear-gradient(160deg,#0a6fd6,#0847a0);border-color:transparent;}
 .plan.trial p{color:#dcebff;}
