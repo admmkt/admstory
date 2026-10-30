@@ -1210,7 +1210,7 @@ function drawSlots(ctx, slots){
 
 /* marca d'água do teste grátis */
 function drawWatermark(ctx, W, H){
-  const text = "Feito com ADM Story";
+  const text = "Feito com DGA Stories";
   ctx.save();
   ctx.font = "600 " + Math.round(H*0.022) + "px 'Inter', sans-serif";
   const w = ctx.measureText(text).width + H*0.04, h = H*0.042;
@@ -1222,7 +1222,7 @@ function drawWatermark(ctx, W, H){
   ctx.globalAlpha = 0.18;
   ctx.font = "800 " + Math.round(H*0.06) + "px 'Montserrat', sans-serif";
   ctx.translate(W/2, H*0.45); ctx.rotate(-Math.PI/7);
-  ctx.fillText("ADM STORY", 0, 0);
+  ctx.fillText("DGA STORIES", 0, 0);
   ctx.restore();
 }
 

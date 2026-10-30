@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-09-01"
 
 [vars]
-FIREBASE_PROJECT = "adm-story-app" # id do projeto Firebase do ADM Story
+FIREBASE_PROJECT = "adm-story-app" # id do projeto Firebase do DGA Stories
 SITE_ORIGIN = "https://admmkt.github.io"
 SITE_URL = "https://admmkt.github.io/admstory/"
 PRICE_MENSAL = "29.90" # em reais — mudar também em index.html (site)

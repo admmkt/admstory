@@ -22,7 +22,7 @@ gateOut.addEventListener("click", () => sair());
 onUser(async user => {
   gateOut.hidden = !user;
   if(!user){
-    bloquear("Entre na sua conta", "Use o e-mail e a senha da sua assinatura do ADM Story.", "Entrar ou assinar");
+    bloquear("Entre na sua conta", "Use o e-mail e a senha da sua assinatura do DGA Stories.", "Entrar ou assinar");
     return;
   }
   const key = "admstory.paidUntil." + user.uid;
