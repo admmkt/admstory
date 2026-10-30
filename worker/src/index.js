@@ -1,4 +1,4 @@
-// Servidor de pagamentos do ADM Story (Cloudflare Worker). Adaptado do Rota Segura.
+// Servidor de pagamentos do DGA Stories (Cloudflare Worker). Adaptado do Rota Segura.
 //   POST /checkout  — usuário logado (token do Firebase) escolhe o plano e recebe o link de assinatura do Mercado Pago
 //                     (vitalício: link de pagamento único do Checkout Pro, aceita Pix).
 //   POST /verificar — usuário logado pede para conferir no MP (caso o aviso do webhook tenha se perdido).
@@ -58,7 +58,7 @@ async function checkout(req, env) {
 
   if (plan.unico) {
     const pref = await mp(env, "POST", "/checkout/preferences", {
-      items: [{ title: "ADM Story — acesso vitalício", quantity: 1, unit_price: plan.price(env), currency_id: "BRL" }],
+      items: [{ title: "DGA Stories — acesso vitalício", quantity: 1, unit_price: plan.price(env), currency_id: "BRL" }],
       external_reference: user.uid,
       metadata: { plano: "vitalicio" },
       payer: { email: payerEmail },
@@ -70,7 +70,7 @@ async function checkout(req, env) {
   }
 
   const sub = await mp(env, "POST", "/preapproval", {
-    reason: `ADM Story — plano ${plan.label}`,
+    reason: `DGA Stories — plano ${plan.label}`,
     external_reference: user.uid,
     payer_email: payerEmail,
     auto_recurring: { frequency: plan.months, frequency_type: "months", transaction_amount: plan.price(env), currency_id: "BRL" },

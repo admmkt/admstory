@@ -185,7 +185,7 @@ async function iniciarTeste(){
   try{
     const {ok, status, data} = await chamarWorker("/teste");
     if(ok && data.ok) pixel("track", "StartTrial", {value: 0, currency: "BRL"});
-    if(ok && data.ok) mostrar("Teste grátis ativado!", `Você pode usar o app até ${quando(data.until)}: até 3 exportações, com a marca d'água "ADM Story". Depois, assine para exportar sem marca e sem limite.`, [["Começar a usar", "app/"]]);
+    if(ok && data.ok) mostrar("Teste grátis ativado!", `Você pode usar o app até ${quando(data.until)}: até 3 exportações, com a marca d'água "DGA Stories". Depois, assine para exportar sem marca e sem limite.`, [["Começar a usar", "app/"]]);
     else if(status === 409 && data.error === "usado") mostrar("Você já usou o teste grátis nesta conta", "O teste é uma vez por conta. Assine para exportar sem marca d'água e sem limite.", [planos]);
     else if(status === 401) mostrar("Entre na sua conta", "Sua sessão expirou. Entre de novo para ativar o teste.", [["Entrar", "#conta"]]);
     else mostrar("Não foi possível ativar o teste", "Confira a internet e tente de novo.");

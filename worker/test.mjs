@@ -22,7 +22,7 @@ assert.equal(
 );
 console.log("ok");
 
-// ADM Story: plano anual cobre 12 meses; o período vem da assinatura no MP.
+// DGA Stories: plano anual cobre 12 meses; o período vem da assinatura no MP.
 import { planMonths } from "./src/index.js";
 assert.equal(planMonths({ auto_recurring: { frequency: 12, frequency_type: "months" } }), 12);
 assert.equal(planMonths({ auto_recurring: { frequency: 1, frequency_type: "months" } }), 1);
